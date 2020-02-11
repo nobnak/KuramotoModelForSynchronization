@@ -79,6 +79,7 @@ public class KuramotoModel : MonoBehaviour {
     private void OnRenderObject() {
         var n = nOnLine * nOnLine;
 
+#if false
         float h, s, v;
         Color.RGBToHSV(mat.GetColor(PROP_COLOR_HIGHLIGHT), out h, out s, out v);
         h += shadowColorHsvOffset.x;
@@ -88,6 +89,7 @@ public class KuramotoModel : MonoBehaviour {
         s = Mathf.Clamp01(s);
         v = Mathf.Clamp01(v);
         mat.SetColor(PROP_COLOR_SHADOW, Color.HSVToRGB(h, s, v));
+#endif
 
         mat.SetBuffer(PROP_PARTICLE_MODEL_MATRIX, particleModelMatricesBuffer);
         mat.SetBuffer(PROP_PHASES, phasesBuffer);
@@ -102,7 +104,7 @@ public class KuramotoModel : MonoBehaviour {
     private void OnDisable() {
         Release();
     }
-    #endregion
+#endregion
 
     protected void WindowFunc(int id) {
         GUILayout.BeginVertical();
