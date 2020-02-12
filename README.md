@@ -1,6 +1,6 @@
 # An implementation of Kuramoto model of Synchronization on Unity3D
 
-Implemented thi following equations:
+Implemented the following equations:
 [![Equation](KuramotoModelEquation.png)](https://en.wikipedia.org/w/index.php?title=Kuramoto_model&oldid=936505629)
 
 ## Example
