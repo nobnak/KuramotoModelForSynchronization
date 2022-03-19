@@ -6,3 +6,7 @@ Implemented the following equations:
 ## Example
 
 [![thumbnail](http://img.youtube.com/vi/1Cz911-6Y-g/sddefault.jpg)](https://youtu.be/1Cz911-6Y-g)
+
+## References
+1. [Kuramoto Model](https://en.wikipedia.org/wiki/Kuramoto_model)
+
