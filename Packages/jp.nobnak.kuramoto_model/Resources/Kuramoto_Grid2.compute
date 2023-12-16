@@ -1,0 +1,65 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel Next
+#pragma kernel Coherence
+
+
+#define CIRCLE_IN_RAD 6.28318530717
+#define RAD_TO_ONE (1.0 / CIRCLE_IN_RAD)
+#include "Packages/jp.nobnak.random-xorwow/ShaderLibrary/Xorwow.cginc"
+
+// coupling, couplingRange, noise, 0
+float4 _P0;
+float _Time_Delta;
+
+uint2 _Grid_Size;
+uint _Phases_Length;
+RWStructuredBuffer<float> _Phases;
+RWStructuredBuffer<float> _Coherence_Phis;
+RWStructuredBuffer<float> _Coherence_Radiuses;
+StructuredBuffer<float> _Speeds;
+
+
+[numthreads(64,1,1)]
+void Next (uint3 id : SV_DispatchThreadID) {
+    if (id.x >= _Phases_Length) return;
+
+    float dt = _Time_Delta;
+    uint i = id.x;
+
+    float p = _Phases[i];
+    float cphi = _Coherence_Phis[i];
+    float crad = _Coherence_Radiuses[i];
+    p += dt * (_Speeds[i]
+        + _P0.z * Xorwow_NextFloat(i)
+        + _P0.x * crad * sin((cphi - p) * CIRCLE_IN_RAD));
+    p = frac(p);
+    _Phases[i] = p;
+}
+
+[numthreads(8, 8, 1)]
+void Coherence(uint3 id : SV_DispatchThreadID) {
+    if (any(id.xy >= _Grid_Size.xy)) return;
+
+    uint i = dot(id.xy, uint2(1, _Grid_Size.x));
+
+    float2 sum = 0;
+    int couplingRange = (int)_P0.y;
+    for (int h = -couplingRange; h <= couplingRange; h++) {
+        for (int w = -couplingRange; w <= couplingRange; w++) {
+            if (h == 0 && w == 0) continue;
+
+            int2 id1 = id.xy + int2(w, h);
+            if (any(id1 < 0) || any(_Grid_Size.xy <= (uint)id1)) continue;
+
+            int j = dot(id1, uint2(1, _Grid_Size.x));
+            float theta = _Phases[j] * CIRCLE_IN_RAD;
+            sum += float2(cos(theta), sin(theta));
+        }
+    }
+
+    int bandwidth = 2 * couplingRange + 1;
+    int counter = bandwidth * bandwidth - 1;
+    sum /= counter;
+    _Coherence_Phis[i] = atan2(sum.y, sum.x) * RAD_TO_ONE;
+    _Coherence_Radiuses[i] = length(sum);
+}

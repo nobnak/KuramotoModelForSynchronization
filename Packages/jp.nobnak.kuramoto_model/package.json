@@ -1,0 +1,16 @@
+{
+	"author": {
+		"name": "Nakata Nobuyuki",
+		"email": "nobu.nakata@gmail.com"
+	},
+	"name": "jp.nobnak.kuramoto_model",
+	"displayName": "Kuramoto Model",
+	"version": "0.1.0",
+
+	"samples": [
+	],
+
+	"dependencies": {
+		"com.unity.mathematics": "1.2.6"
+	}
+}
