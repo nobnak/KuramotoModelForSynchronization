@@ -64,7 +64,7 @@ public class Simulator : MonoBehaviour {
             GUILayout.MinWidth(200f));
     }
     private void OnRenderObject() {
-        if (!enabled) return;
+        if (!enabled || grid2 == null) return;
 
         var n = nOnLine * nOnLine;
 

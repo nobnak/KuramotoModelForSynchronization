@@ -249,10 +249,10 @@ MonoBehaviour:
   mat: {fileID: 2100000, guid: a9b400774727e0d47a8b94e11a307d69, type: 2}
   nOnLine: 100
   sizeGain: 10
-  coupling: 0.39285713
+  coupling: 0
   couplingRange: 1
   speed: 1
-  speedVariation: 0.1
+  speedVariation: 0.385
   noise: 5.66
   shadowColorHsvOffset: {x: -0.2, y: 0, z: -0.5}
 --- !u!4 &941099393

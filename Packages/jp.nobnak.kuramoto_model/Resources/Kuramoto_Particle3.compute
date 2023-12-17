@@ -1,0 +1,74 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel Next
+#pragma kernel Coherence
+
+
+#define CIRCLE_IN_RAD 6.28318530717
+#define RAD_TO_ONE (1.0 / CIRCLE_IN_RAD)
+#include "Packages/jp.nobnak.kuramoto_model/Runtime/Data/Particle3.cs.hlsl"
+#include "Packages/jp.nobnak.random-xorwow/ShaderLibrary/Xorwow.cginc"
+
+// coupling, couplingRange, noise, 0
+float4 _P0;
+float _Time_Delta;
+
+uint _Particles_Length;
+RWStructuredBuffer<Particle3> _Particles;
+RWStructuredBuffer<float> _Phases;
+RWStructuredBuffer<float> _Coherence_Phis;
+RWStructuredBuffer<float> _Coherence_Radiuses;
+StructuredBuffer<float> _Speeds;
+
+
+[numthreads(64,1,1)]
+void Next (uint3 id : SV_DispatchThreadID) {
+    if (id.x >= _Particles_Length) return;
+
+    float dt = _Time_Delta;
+    uint i = id.x;
+    float phase = _Phases[i];
+    float cphi = _Coherence_Phis[i];
+    float crad = _Coherence_Radiuses[i];
+    phase += dt * (_Speeds[i]
+        + _P0.z * Xorwow_NextFloat(i)
+        + _P0.x * crad * sin((cphi - phase) * CIRCLE_IN_RAD));
+    phase = frac(phase);
+
+    _Phases[i] = phase;
+}
+
+[numthreads(64, 1, 1)]
+void Coherence(uint3 id : SV_DispatchThreadID) {
+    if (id.x >= _Particles_Length) return;
+
+    Particle3 p = _Particles[id.x];
+    float2 sum = 0;
+    float couplingRange = _P0.y;
+    float cr_sq = couplingRange * couplingRange;
+    float w = 0;
+    for (uint i = 0; i <= _Particles_Length; i++) {
+        if (i == id.x) continue;
+
+        Particle3 p1 = _Particles[i];
+        if (p1.activity == 0) continue;
+
+        float3 d = p1.pos - p.pos;
+        float dist_sq = dot(d, d);
+        if (dist_sq > cr_sq) continue;
+
+        float phase = _Phases[i];
+        float theta = phase * CIRCLE_IN_RAD;
+        sum += float2(cos(theta), sin(theta));
+        w++;
+    }
+
+    float phi = 0;
+    float radius = 0;
+    if (w > 0) {
+        sum /= w;
+        phi = atan2(sum.y, sum.x) * RAD_TO_ONE;
+        radius = length(sum);
+    }
+    _Coherence_Phis[i] = phi;
+    _Coherence_Radiuses[i] = radius;
+}
