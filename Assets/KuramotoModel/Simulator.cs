@@ -64,6 +64,8 @@ public class Simulator : MonoBehaviour {
             GUILayout.MinWidth(200f));
     }
     private void OnRenderObject() {
+        if (!enabled) return;
+
         var n = nOnLine * nOnLine;
 
         mat.SetBuffer(PROP_PARTICLE_MODEL_MATRIX, particleModelMatricesBuffer);
