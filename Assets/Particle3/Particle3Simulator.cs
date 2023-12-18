@@ -66,7 +66,7 @@ public class Particle3Simulator : MonoBehaviour {
         mat.SetBuffer(P_CohPhi, particle3.coherencePhases);
 
         mat.SetPass(0);
-        Graphics.DrawProceduralNow(MeshTopology.Triangles, 6, n);
+        Graphics.DrawProceduralNow(MeshTopology.Points, 1, n);
     }
     private void OnValidate() {
         invalid = true;

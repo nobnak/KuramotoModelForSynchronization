@@ -376,10 +376,10 @@ MonoBehaviour:
   tuner:
     coupling: 0
     couplingRange: 1
-    noise: 0.1
+    noise: 0.3
   settings:
     speed: 1
-    speedVariation: 0.3
+    speedVariation: 0.1
 --- !u!1 &1474817715
 GameObject:
   m_ObjectHideFlags: 0

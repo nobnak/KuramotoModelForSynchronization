@@ -10,18 +10,9 @@ Shader "Unlit/Particle" {
     }
     SubShader {
         Tags { "RenderType"="Transparent" "Queue" = "Transparent" }
-        Cull Off
-        ZWrite Off
-        ZTest LEqual
-        Blend SrcAlpha OneMinusSrcAlpha
 
-        Pass {
-            HLSLPROGRAM
-            #pragma target 4.0
-            #pragma vertex vert
-            #pragma geometry geom
-            #pragma fragment frag
-
+        HLSLINCLUDE
+        
             #include "UnityCG.cginc"
 
             struct appdata {
@@ -88,6 +79,20 @@ Shader "Unlit/Particle" {
                 float4 cout = cmain * i.color * _Color;
                 return cout;
             }
+        ENDHLSL
+
+        Pass {
+            Cull Off
+            ZWrite On
+            ZTest LEqual
+            Blend SrcAlpha OneMinusSrcAlpha
+
+            HLSLPROGRAM
+            #pragma target 4.0
+            #pragma vertex vert
+            #pragma geometry geom
+            #pragma fragment frag
+
             ENDHLSL
         }
     }
