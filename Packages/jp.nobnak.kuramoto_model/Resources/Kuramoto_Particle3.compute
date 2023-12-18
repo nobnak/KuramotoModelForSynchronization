@@ -39,24 +39,25 @@ void Next (uint3 id : SV_DispatchThreadID) {
 
 [numthreads(64, 1, 1)]
 void Coherence(uint3 id : SV_DispatchThreadID) {
-    if (id.x >= _Particles_Length) return;
+    uint i0 = id.x;
+    if (i0 >= _Particles_Length) return;
 
-    Particle3 p = _Particles[id.x];
+    Particle3 p = _Particles[i0];
     float2 sum = 0;
     float couplingRange = _P0.y;
     float cr_sq = couplingRange * couplingRange;
     float w = 0;
-    for (uint i = 0; i <= _Particles_Length; i++) {
-        if (i == id.x) continue;
+    for (uint i1 = 0; i1 < _Particles_Length; i1++) {
+        if (i1 == i0) continue;
 
-        Particle3 p1 = _Particles[i];
+        Particle3 p1 = _Particles[i1];
         if (p1.activity == 0) continue;
 
         float3 d = p1.pos - p.pos;
         float dist_sq = dot(d, d);
         if (dist_sq > cr_sq) continue;
 
-        float phase = _Phases[i];
+        float phase = _Phases[i1];
         float theta = phase * CIRCLE_IN_RAD;
         sum += float2(cos(theta), sin(theta));
         w++;
@@ -69,6 +70,6 @@ void Coherence(uint3 id : SV_DispatchThreadID) {
         phi = atan2(sum.y, sum.x) * RAD_TO_ONE;
         radius = length(sum);
     }
-    _Coherence_Phis[i] = phi;
-    _Coherence_Radiuses[i] = radius;
+    _Coherence_Phis[i0] = phi;
+    _Coherence_Radiuses[i0] = radius;
 }

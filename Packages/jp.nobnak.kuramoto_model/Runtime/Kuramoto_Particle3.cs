@@ -7,6 +7,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using Xorwow;
 using Xorwow.Extension;
+using static UnityEngine.ParticleSystem;
 using Random = Unity.Mathematics.Random;
 
 namespace KuramotoModel {
@@ -24,7 +25,7 @@ namespace KuramotoModel {
         Particle3[] particles_src;
 
         #region properties
-        public Tuner CurrTuner { get; protected set; }
+        public Tuner CurrTuner { get; set; }
 
         public uint capacity { get; protected set; }
         public Presets settings { get; protected set; }
@@ -63,18 +64,18 @@ namespace KuramotoModel {
         }
         public void Update(Tuner tuner) {
             this.CurrTuner = tuner;
-
-            Validate();
             Coherence();
             Next();
         }
         public void Next() {
+            Validate();
+
             var n = (int)capacity;
 
             cs.SetFloat(P_Time_Delta, Time.deltaTime);
             cs.SetVector(P_P0, P0);
 
-            cs.SetInt(P_Particles_Length, n);
+            cs.SetInt(P_Particles_Length, particles.count);
             cs.SetBuffer(k_next, P_Particles, particles);
 
             cs.SetBuffer(k_next, P_Phases, phases);
@@ -88,12 +89,14 @@ namespace KuramotoModel {
                 1, 1);
         }
         public void Coherence() {
+            Validate();
+
             var n = (int)capacity;
 
             cs.SetVector(P_P0, P0);
 
-            cs.SetInt(P_Particles_Length, n);
-            cs.SetBuffer(k_next, P_Particles, particles);
+            cs.SetInt(P_Particles_Length, particles.count);
+            cs.SetBuffer(k_coherence, P_Particles, particles);
 
             cs.SetBuffer(k_coherence, P_Phases, phases);
             cs.SetBuffer(k_coherence, P_Coherence_Phis, coherencePhis);
@@ -139,9 +142,9 @@ namespace KuramotoModel {
             coherencePhases = new GraphicsBuffer(GraphicsBuffer.Target.Structured, n, Marshal.SizeOf<float>());
 
             var speed = settings.speed;
-            var speedVariation = settings.speedVariation;
+            var speedVariation = math.abs(settings.speedVariation);
             phases.SetData(Enumerable.Range(0, n).Select(i => rand.NextFloat()).ToArray());
-            speeds.SetData(Enumerable.Range(0, n).Select(i => speed * rand.NextFloat(1f - speedVariation, 1f + speedVariation)).ToArray());
+            speeds.SetData(Enumerable.Range(0, n).Select(i => speed * rand.NextFloat(1f, 1f + speedVariation)).ToArray());
         }
         protected void Release() {
             if (xorwow != null) {
@@ -189,10 +192,12 @@ namespace KuramotoModel {
         public static readonly int P_Coherence_Phis = Shader.PropertyToID("_Coherence_Phis");
         public static readonly int P_Coherence_Radiuses = Shader.PropertyToID("_Coherence_Radiuses");
 
+        [System.Serializable]
         public struct Presets {
             public float speed;
             public float speedVariation;
         }
+        [System.Serializable]
         public struct Tuner {
             public float coupling;
             public float couplingRange;

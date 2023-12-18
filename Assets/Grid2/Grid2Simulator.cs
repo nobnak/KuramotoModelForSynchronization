@@ -6,7 +6,7 @@ using Unity.Mathematics;
 using UnityEngine;
 
 [ExecuteInEditMode]
-public class Simulator : MonoBehaviour {
+public class Grid2Simulator : MonoBehaviour {
     public const string PROP_PARTICLE_MODEL_MATRIX = "_ParticleModelMatrices";
     public const string PROP_PHASES = "_Phases";
     public const string PROP_COLOR_HIGHLIGHT = "_Highlight";
