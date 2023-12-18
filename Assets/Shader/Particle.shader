@@ -69,7 +69,6 @@ Shader "Unlit/Particle" {
                 float size = _Size;
                 float4 color = _Color;
                 color *= lerp(_Shadow, _Highlight, 0.5 * (cos(phase * CIRCLE_IN_RADIAN) + 1.0));
-					//* lerp(_CohColor, 1, sin((cohPhi - phase) * CIRCLE_IN_RADIAN));
 
                 make_quad(stream, center_wc, size, color);
             }

@@ -81,9 +81,9 @@ public class Particle3Simulator : MonoBehaviour {
         GUILayout.BeginVertical();
 
         GUILayout.Label(string.Format("Coherence : {0}", tuner.coupling));
-        GUILayout.BeginHorizontal();
-        tuner.coupling = GUILayout.HorizontalSlider(tuner.coupling, 0f, 10f);
-        GUILayout.EndHorizontal();
+        tuner.coupling = GUILayout.HorizontalSlider(tuner.coupling, 0f, 0.1f);
+        GUILayout.Label(string.Format("Range : {0}", tuner.couplingRange));
+        tuner.couplingRange = GUILayout.HorizontalSlider(tuner.couplingRange, 0f, 2f);
 
         GUILayout.EndVertical();
         GUI.DragWindow();
@@ -145,9 +145,8 @@ public class Particle3Simulator : MonoBehaviour {
 
         public AlignmentMode alignmentMode;
 
-        [Range(1, 1000)]
+        [Range(1, 10000)]
         public int n = 100;
-        public Vector3 shadowColorHsvOffset = new Vector3(-0.2f, 0f, -0.5f);
     }
     #endregion
 }

@@ -1,13 +1,9 @@
-﻿using Codice.CM.Common;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Runtime.InteropServices;
 using Unity.Mathematics;
 using UnityEngine;
 using Xorwow;
 using Xorwow.Extension;
-using static UnityEngine.ParticleSystem;
 using Random = Unity.Mathematics.Random;
 
 namespace KuramotoModel {
