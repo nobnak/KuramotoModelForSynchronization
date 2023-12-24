@@ -1,7 +1,7 @@
 # Kuramoto synchronization model for Unity
 
 ## Installation
-Released as a UPM package on OpenUPM.
+Released as [UPM package on OpenUPM](https://openupm.com/packages/jp.nobnak.kuramoto_model/).
 
 - Add URL "https://package.openupm.com" in a Scoped Registry
 - Add scope "jp.nobnak"
