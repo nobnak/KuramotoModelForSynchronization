@@ -370,11 +370,12 @@ MonoBehaviour:
   presets:
     mat: {fileID: 2100000, guid: 2757cf72dd1f1ef499ed315fa727504e, type: 2}
     field: {fileID: 617847567}
-    alignmentMode: 0
+    rotator: {fileID: 1601239193}
+    alignmentMode: 1
     n: 5000
   tuner:
     coupling: 0
-    couplingRange: 0.5
+    couplingRange: 0.2
     noise: 0.3
   settings:
     speed: 1
@@ -584,7 +585,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1601239191}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6bb52cb5be1a2cb4189c55aa18514204, type: 3}
   m_Name: 

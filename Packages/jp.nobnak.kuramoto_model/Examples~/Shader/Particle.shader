@@ -25,7 +25,7 @@ Shader "Unlit/Particle" {
                 float4 color : COLOR;
             };
 
-            #include "Assets/ShaderLibrary/Particle.hlslinclude"
+            #include "../ShaderLibrary/Particle.hlslinclude"
             #include "Packages/jp.nobnak.kuramoto_model/Runtime/Data/Particle3.cs.hlsl"
             #define FADE 0.5
 			#define CIRCLE_IN_RADIAN 6.28318530718

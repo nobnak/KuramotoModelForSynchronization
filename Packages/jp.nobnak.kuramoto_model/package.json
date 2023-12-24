@@ -8,6 +8,11 @@
 	"version": "0.1.0",
 
 	"samples": [
+		{
+			"displayName": "Examples",
+			"description": "Kuramoto Model Examples",
+			"path": "Examples~"
+		}
 	],
 
 	"dependencies": {

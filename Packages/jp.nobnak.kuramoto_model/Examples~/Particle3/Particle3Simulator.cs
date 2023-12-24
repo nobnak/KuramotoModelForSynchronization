@@ -78,12 +78,19 @@ public class Particle3Simulator : MonoBehaviour {
 
     #region methods
     protected void WindowFunc(int id) {
+        var rotator = presets.rotator;
+
         GUILayout.BeginVertical();
 
+        if (rotator != null) {
+            GUILayout.Label("Rotation");
+            rotator.enabled = GUILayout.Toggle(rotator.enabled, "Rotator");
+        }
+
         GUILayout.Label(string.Format("Coherence : {0}", tuner.coupling));
-        tuner.coupling = GUILayout.HorizontalSlider(tuner.coupling, 0f, 0.1f);
+        tuner.coupling = GUILayout.HorizontalSlider(tuner.coupling, 0f, 1f);
         GUILayout.Label(string.Format("Range : {0}", tuner.couplingRange));
-        tuner.couplingRange = GUILayout.HorizontalSlider(tuner.couplingRange, 0f, 2f);
+        tuner.couplingRange = GUILayout.HorizontalSlider(tuner.couplingRange, 0f, 10f);
 
         GUILayout.EndVertical();
         GUI.DragWindow();
@@ -115,13 +122,12 @@ public class Particle3Simulator : MonoBehaviour {
             }
             case AlignmentMode.Grid2: {
                 var m = (int)math.ceil(math.sqrt(n));
-                var stride = tuner.couplingRange * 0.999f;
-                float3 offset_wc = field.TransformPoint(new float3(-0.5f, -0.5f, 0f));
+                var stride = 1f / m;
                 for (var i = 0; i < n; i++) {
-                    var x = (i % m) + 0.5f;
-                    var y = (i / m) + 0.5f;
-                    var pos = new float3(x * stride, y * stride, 0f);
-                    pos += offset_wc;
+                    var x = ((i % m) + 0.5f) * stride;
+                    var y = ((i / m) + 0.5f) * stride;
+                    var pos = new float3(x - 0.5f, y - 0.5f, 0f);
+                    pos = field.TransformPoint(pos);
                     particle3[i] = new() {
                         activity = 1,
                         pos = pos,
@@ -142,6 +148,7 @@ public class Particle3Simulator : MonoBehaviour {
     public class Presets {
         public Material mat;
         public Transform field;
+        public Rotator rotator;
 
         public AlignmentMode alignmentMode;
 
